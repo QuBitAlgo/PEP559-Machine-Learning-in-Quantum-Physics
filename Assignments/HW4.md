@@ -1,21 +1,23 @@
 # Assignment #4
 
-## Question 1: BPTT and the Vanishing/Exploding Gradient
+## Question 1: Many-to-One BPTT
 
-Consider an RNN unrolled for $T=3$ time steps. To understand the effect of weight multiplication on gradient stability, we assume the hidden layer has **2 nodes**, while the input and output remain scalars.
+Consider a **many-to-one** RNN architecture unrolled for $T=3$ time steps. The network receives three sequential inputs but only produces a single output at the final step (see page 11 of the slides). All units are scalars (e.g., the input $x^{(t)}$ is a single real number, not a vector.
 
-* **Hidden State (Vector):** $\mathbf{h}^{(t)} = \sigma(W_{hh}\mathbf{h}^{(t-1)} + \mathbf{w}_{xh}x^{(t)} + \mathbf{b}_h)$ where $\mathbf{h} \in \mathbb{R}^2$ and $W_{hh} \in \mathbb{R}^{2 \times 2}$.
-* **Output (Scalar):** $o^{(t)} = \sigma(\mathbf{w}_{ho}^\top \mathbf{h}^{(t)} + b_o)$
-* **Loss:** $L = \sum_{t=1}^{3} L^{(t)}$, where $L^{(t)} = \frac{1}{2}(y^{(t)} - o^{(t)})^2$
+* **Hidden States:** $h^{(t)} = \sigma(w_{hh}h^{(t-1)} + w_{xh}x^{(t)} + b_h)$ for $t=1, 2, 3$.
+* **Final Output:** $o^{(3)} = \sigma(w_{ho}h^{(3)} + b_o)$
+* **Total Loss:** $L = \frac{1}{2}(y - o^{(3)})^2$
 
 ### Your Task:
-1.  **Derive the Gradient:** Write the analytical expression for $\frac{\partial L^{(3)}}{\partial W_{hh}}$.
-2.  **The Matrix Product:** Focus specifically on the term $\frac{\partial \mathbf{h}^{(3)}}{\partial \mathbf{h}^{(1)}}$. Write it as a product of two Jacobian matrices.
-3.  **Stability Analysis:** * If the eigenvalues of $W_{hh}$ are both $0.1$, what happens to the gradient as $T \to \infty$?
-    * If one eigenvalue is $5.0$, what happens?
+Derive the analytical expressions for the following:
+
+1.  **Output Weight Gradient:** $\frac{\partial L}{\partial w_{ho}}$
+2.  **Recurrent Weight Gradient:** $\frac{\partial L}{\partial w_{hh}}$
 
 ### Requirements:
-* Use the **Chain Rule** to show how the gradient flows from $L^{(3)}$ back to the weight matrix $W_{hh}$ through the hidden states $\mathbf{h}^{(2)}$ and $\mathbf{h}^{(1)}$.
-* Identify where the repeated multiplication of $W_{hh}$ occurs in your derivation.
+* **The "Unrolled" Chain Rule:** For $\frac{\partial L}{\partial w_{hh}}$, show how the gradient flows from the loss $L$ back through $h^{(3)}$, $h^{(2)}$, and $h^{(1)}$. 
+* **Term Expansion:** Specifically, show that:
+  $$\frac{\partial h^{(3)}}{\partial w_{hh}} = \frac{\partial h^{(3)}}{\partial z_h^{(3)}} \left[ h^{(2)} + \frac{\partial h^{(3)}}{\partial h^{(2)}} \left( h^{(1)} + \dots \right) \right]$$
+* **Stability Discussion:** Explain why the repeated term $(w_{hh} \cdot \sigma')$ could lead to a vanishing gradient if $T$ were increased from 3 to 100.
 
-**Assessment:** Submission is not required. We will live-derive the $2 \times 2$ case on the whiteboard to visualize how "exploding gradients" emerge from matrix powers.
+**Assessment:** Submission is not required. Be prepared to show the "Many-to-One" gradient flow on the whiteboard.
