@@ -16,8 +16,6 @@ Derive the analytical expressions for the following:
 
 ### Requirements:
 * **The "Unrolled" Chain Rule:** For $\frac{\partial L}{\partial w_{hh}}$, show how the gradient flows from the loss $L$ back through $h^{(3)}$, $h^{(2)}$, and $h^{(1)}$. 
-* **Term Expansion:** Specifically, show that:
-  $$\frac{\partial h^{(3)}}{\partial w_{hh}} = \frac{\partial h^{(3)}}{\partial z_h^{(3)}} \left[ h^{(2)} + \frac{\partial h^{(3)}}{\partial h^{(2)}} \left( h^{(1)} + \dots \right) \right]$$
 * **Stability Discussion:** Explain why the repeated term $(w_{hh} \cdot \sigma')$ could lead to a vanishing gradient if $T$ were increased from 3 to 100.
 
 **Assessment:** Submission is not required. Be prepared to show the "Many-to-One" gradient flow on the whiteboard.
